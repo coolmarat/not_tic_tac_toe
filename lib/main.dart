@@ -280,7 +280,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Числовые крестики-нолики'),
+        title: const Text('1Числовые крестики-нолики'),
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline),
