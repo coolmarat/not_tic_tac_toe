@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'models/game_state.dart';
+import 'dart:math'; // добавляем импорт для использования math.min
 
 void main() {
   runApp(const MyApp());
@@ -293,64 +294,76 @@ class _GameScreenState extends State<GameScreen> {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          // Числа второго игрока (красные)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Column(
-              children: [
-                Text(
-                  'Игрок 2 (красный)${!gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.red,
-                    fontWeight: !gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
-                  ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // Рассчитываем размер игрового поля
+          final availableHeight = constraints.maxHeight;
+          final playerSectionHeight = availableHeight * 0.25; // 25% высоты для каждого игрока
+          final gameFieldSize = min(
+            availableHeight - (playerSectionHeight * 2), // Оставшаяся высота
+            constraints.maxWidth - 40, // Ширина минус отступы
+          );
+
+          return Column(
+            children: [
+              // Числа второго игрока (красные)
+              SizedBox(
+                height: playerSectionHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Игрок 2 (красный)${!gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.red,
+                        fontWeight: !gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildPlayerNumbers(false),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                _buildPlayerNumbers(false),
-              ],
-            ),
-          ),
-          // Игровое поле
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-                itemCount: 9,
-                itemBuilder: (context, index) {
-                  final row = index ~/ 3;
-                  final col = index % 3;
-                  return _buildCell(row, col);
-                },
               ),
-            ),
-          ),
-          // Числа первого игрока (синие)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Column(
-              children: [
-                Text(
-                  'Игрок 1 (синий)${gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.blue,
-                    fontWeight: gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
+              // Игровое поле
+              SizedBox(
+                width: gameFieldSize,
+                height: gameFieldSize,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
                   ),
+                  itemCount: 9,
+                  itemBuilder: (context, index) {
+                    final row = index ~/ 3;
+                    final col = index % 3;
+                    return _buildCell(row, col);
+                  },
                 ),
-                const SizedBox(height: 8),
-                _buildPlayerNumbers(true),
-              ],
-            ),
-          ),
-        ],
+              ),
+              // Числа первого игрока (синие)
+              SizedBox(
+                height: playerSectionHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Игрок 1 (синий)${gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.blue,
+                        fontWeight: gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildPlayerNumbers(true),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
