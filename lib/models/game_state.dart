@@ -41,6 +41,7 @@ class GameState {
   }
 
   bool isValidMove(int row, int col, int number) {
+    
     if (row < 0 || row >= 3 || col < 0 || col >= 3) return false;
     
     final availableNumbers = isFirstPlayerTurn ? availableNumbersPlayer1 : availableNumbersPlayer2;
