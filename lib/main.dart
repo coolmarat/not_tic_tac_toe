@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '1Числовые крестики-нолики',
+      title: 'Числовые крестики-нолики',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -280,7 +280,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('1Числовые крестики-нолики'),
+        title: const Text('Числовые крестики-нолики'),
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline),
@@ -304,64 +304,69 @@ class _GameScreenState extends State<GameScreen> {
             constraints.maxWidth - 40, // Ширина минус отступы
           );
 
-          return Column(
-            children: [
-              // Числа второго игрока (красные)
-              SizedBox(
-                height: playerSectionHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Игрок 2 (красный)${!gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.red,
-                        fontWeight: !gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
-                      ),
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  // Числа второго игрока (красные)
+                  SizedBox(
+                    height: playerSectionHeight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Игрок 2 (красный)${!gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.red,
+                            fontWeight: !gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildPlayerNumbers(false),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    _buildPlayerNumbers(false),
-                  ],
-                ),
-              ),
-              // Игровое поле
-              SizedBox(
-                width: gameFieldSize,
-                height: gameFieldSize,
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
                   ),
-                  itemCount: 9,
-                  itemBuilder: (context, index) {
-                    final row = index ~/ 3;
-                    final col = index % 3;
-                    return _buildCell(row, col);
-                  },
-                ),
-              ),
-              // Числа первого игрока (синие)
-              SizedBox(
-                height: playerSectionHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Игрок 1 (синий)${gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.blue,
-                        fontWeight: gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
+                  // Игровое поле
+                  SizedBox(
+                    width: gameFieldSize,
+                    height: gameFieldSize,
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
                       ),
+                      itemCount: 9,
+                      itemBuilder: (context, index) {
+                        final row = index ~/ 3;
+                        final col = index % 3;
+                        return _buildCell(row, col);
+                      },
                     ),
-                    const SizedBox(height: 8),
-                    _buildPlayerNumbers(true),
-                  ],
-                ),
+                  ),
+                  // Числа первого игрока (синие)
+                  SizedBox(
+                    height: playerSectionHeight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Игрок 1 (синий)${gameState.isFirstPlayerTurn ? " - Ваш ход" : ""}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.blue,
+                            fontWeight: gameState.isFirstPlayerTurn ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildPlayerNumbers(true),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           );
         },
       ),
